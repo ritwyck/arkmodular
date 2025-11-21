@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Ark — build the body you love.</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <!-- Accessibility skip link -->
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <!-- Background video with 0.5x speed, fills screen, black overlay on body -->
+    <video id="video" autoplay muted loop class="video-bg">
+        <source src="./phone parts.mov" type="video/quicktime">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- High contrast toggle for accessibility -->
+    <button id="contrast-toggle" aria-label="Toggle high contrast mode" style="position:fixed;top:10px;right:10px;background:var(--accent-warm);color:var(--paper-ink);border-radius:var(--radius-sm);padding:8px;">Contrast</button>
+
+    <main id="main">
+        <!-- Hero section -->
+        <section class="hero grain reveal-section" aria-labelledby="hero-headline">
+            <div class="headline">
+                <h1 id="hero-headline">Ark — build the body you love.</h1>
+                <p>Craft your phone as a tactile sculpture: analog warmth fused with mechanical precision, for the gallery of the self.</p>
+                <button class="focus-ring magnet-hover" aria-label="Begin building your Ark">Begin Ritual</button>
+            </div>
+            <div class="stage magnet-hover focus-ring" role="region" aria-label="3D phone model stage">
+                <!-- Simulated 3D with repeating gradients; in prod use glTF canvas -->
+                <div class="stage-slot" style="width:100%;height:50px;background:repeating-linear-gradient(to bottom,var(--metal-cold) 0 1px,transparent 1px 3px);border-radius:var(--radius-sm);"></div>
+                <div class="stage-slot" style="width:80%;height:30px;background:repeating-linear-gradient(to right,var(--graphite) 0 2px,transparent 2px 4px);border-radius:var(--radius-sm);margin:10px auto;"></div>
+            </div>
+        </section>
+
+        <!-- Concept section -->
+        <section class="section concept reveal-section" id="concept" aria-labelledby="concept-title">
+            <h2 id="concept-title">Analog-futurist gallery — where mechanics and warmth collide</h2>
+            <p>In this atelier, each module is a sculptural element: tactile as cold metal, warm as aged ink. Revelations unfold slowly, affording contemplation.</p>
+            <div class="reveal-layer">Background vignette</div>
+            <div class="reveal-layer">Midplane card</div>
+            <div class="reveal-layer">Foreground text</div>
+        </section>
+
+        <!-- Builder section -->
+        <section class="section builder" id="builder" aria-labelledby="builder-title">
+            <h2 id="builder-title">Select Your Modules — Ritual Assembly</h2>
+            <div class="module-listbox" role="listbox" aria-label="Phone module options">
+                <div class="module-card focus-ring magnet-hover" tabindex="0" role="option" aria-selected="false" data-id="cpu1" data-count="1" data-price="200">
+                    <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'><circle cx='40' cy='40' r='20' fill='var(--accent-warm)'/></svg>" alt="CPU module thumbnail">
+                    <h3>Aurora CPU — fluid multitasking, warm thermal signature.</h3>
+                    <div class="specs">
+                        <span>Speed: High</span>
+                        <span>Power: Medium</span>
+                        <span>Longevity: Medium</span>
+                    </div>
+                    <button class="spec-toggle focus-ring" aria-label="Explain what speed means">?</button>
+                    <div class="atelier-panel">
+                        <p>What this means: Multitasking speed — how quickly your phone juggles many apps; choose higher for power users.</p>
+                        <svg width="100" height="50"><!-- CSS-drawn mini diagram: gear cluster --></svg>
+                    </div>
+                    <button class="select-btn focus-ring">Select</button>
+                </div>
+                <!-- More cards similarly -->
+                <div class="module-card focus-ring magnet-hover" tabindex="0" role="option" aria-selected="false" data-id="battery1" data-count="1" data-price="150">
+                    <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'><rect x='20' y='20' width='40' height='20' fill='var(--graphite)'/></svg>" alt="Battery module">
+                    <h3>Nidus Battery — layered cell stack for endurance.</h3>
+                    <div class="specs">
+                        <span>Speed: Low</span>
+                        <span>Power: High</span>
+                        <span>Longevity: High</span>
+                    </div>
+                    <button class="spec-toggle focus-ring">?</button>
+                    <div class="atelier-panel"><!-- Explanations --></div>
+                    <button class="select-btn focus-ring">Select</button>
+                </div>
+            </div>
+
+            <!-- Builder rail / atelier panel -->
+            <div class="builder-rail">
+                <h3>Summary</h3>
+                <div id="summary-panel" aria-live="polite">No modules selected.</div>
+                <button class="preset-btn active focus-ring" data-modules='["cpu1","battery1"]'>Dusk Photographer Preset</button>
+                <button class="preset-btn focus-ring" data-modules='["cpu1","display1"]'>Ironworker Power Preset</button>
+            </div>
+        </section>
+
+        <!-- Summary section -->
+        <section class="section summary reveal-section" id="summary" aria-labelledby="summary-title">
+            <h2 id="summary-title">Your Ark Emerges</h2>
+            <p>Behold the synthesis of your choices: a body forged in analog warmth and mechanical rigor.</p>
+            <div class="reveal-layer">Vignette</div>
+            <div class="reveal-layer">Assembly</div>
+            <div class="reveal-layer">Affirmation</div>
+        </section>
+
+        <!-- Final reveal section -->
+        <section class="section reveal reveal-section" id="final-reveal">
+            <h2>Ready for the World</h2>
+            <p>Your Ark awaits deployment. Touch, hold, connect — it is alive.</p>
+        </section>
+    </main>
+
+    <!-- Scripts at end for performance -->
+    <script src="scripts/main.js"></script>
+</body>
+</html>
