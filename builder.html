@@ -10,7 +10,14 @@
     <!-- Accessibility skip link -->
     <a href="#main" class="skip-link">Skip to main content</a>
 
-    <!-- Background video with 0.5x speed, fills screen, black overlay on body -->
+    <!-- Navigation bar -->
+    <nav class="top-nav">
+        <a href="index.html" class="nav-link">home</a>
+        <a href="builder.html" class="nav-link">forge</a>
+        <a href="upgrades.html" class="nav-link">upgrade</a>
+    </nav>
+
+    <!-- Background video -->
     <video id="video" autoplay muted loop class="video-bg">
         <source src="./phone.mov" type="video/quicktime">
         Your browser does not support the video tag.
@@ -24,29 +31,50 @@
         </header>
 
         <!-- Price display -->
-        <div class="price-display">
-            <p>total price: $<span id="total-price">0</span> (budget $400 - $1600)</p>
+        <div class="fixed-price-display">
+            <p>price: $<span id="total-price">0</span></p>
         </div>
 
-        <!-- Module selector -->
-        <div class="module-selector">
-            <div class="family-tabs">
-                <button class="family-tab active" data-family="npu">Neural Compute</button>
-                <button class="family-tab" data-family="cpu">CPU/GPU</button>
-                <button class="family-tab" data-family="ram">RAM</button>
-                <button class="family-tab" data-family="thermal">Thermal</button>
-                <button class="family-tab" data-family="battery">Battery</button>
-                <button class="family-tab" data-family="camera">Camera</button>
-                <button class="family-tab" data-family="display">Display</button>
-                <button class="family-tab" data-family="frame">Frame</button>
-            </div>
-            <div class="module-grid" role="listbox" aria-label="Available modules"></div>
-        </div>
+        <!-- Module categories -->
+        <section class="module-category" data-family="npu">
+            <h2>neural compute</h2>
+            <div class="module-grid"></div>
+        </section>
 
-        <div class="selection-summary">
-            <p>selected: <span id="selected-module">none</span></p>
-            <button id="confirm-install" disabled>Install Module</button>
-        </div>
+        <section class="module-category" data-family="cpu">
+            <h2>cpu/gpu</h2>
+            <div class="module-grid"></div>
+        </section>
+
+        <section class="module-category" data-family="ram">
+            <h2>ram</h2>
+            <div class="module-grid"></div>
+        </section>
+
+        <section class="module-category" data-family="thermal">
+            <h2>thermal</h2>
+            <div class="module-grid"></div>
+        </section>
+
+        <section class="module-category" data-family="battery">
+            <h2>battery</h2>
+            <div class="module-grid"></div>
+        </section>
+
+        <section class="module-category" data-family="camera">
+            <h2>camera</h2>
+            <div class="module-grid"></div>
+        </section>
+
+        <section class="module-category" data-family="display">
+            <h2>display</h2>
+            <div class="module-grid"></div>
+        </section>
+
+        <section class="module-category" data-family="frame">
+            <h2>frame</h2>
+            <div class="module-grid"></div>
+        </section>
     </main>
 
     <!-- Scripts -->

@@ -1,15 +1,7 @@
-// Main JS for Ark Modular - full builder page
-// Pure JS, no libraries; focuses on module selection, assembly
-// Same data & logic as modal, but full page
+// Upgrades page JS - similar to builder but for purchasing spare parts
+// No compatibly checks, just add to cart
 
-  // Phone sizes data
-const phoneSizes = [
-  { id: "size-compact", title: "Compact", price_add: 0, explain: "Smaller screen (5.5\") for one-handed use, basic performance." },
-  { id: "size-standard", title: "Standard", price_add: 100, explain: "Standard size (6.1\") for most users, balanced features." },
-  { id: "size-large", title: "Large", price_add: 200, explain: "Larger screen (6.7\") for media and productivity, enables high-power combos." }
-];
-
-  // Module data (local storage) - prices adjusted for 450-1800 total
+  // Module data - reuse from builder
 const modulesData = [
   // Neural Compute
   { id: "npu-muse", group: "npu", title: "Muse NPU", tier: "muse", price: 100, weight_g: 8, power_w: 2.5, compatibility: { requires: [], conflicts: [] }, specs: { peak_ops: "4 TOPS", local_ai: "basic local inference", explain: "Great for basic AI tasks like voice assistant." }, appearance: { material: "matte-carbon", accent: "--accent-violet" } },
@@ -45,61 +37,17 @@ const modulesData = [
   { id: "frame-walnut", group: "frame", title: "Walnut Veneer", tier: "walnut", price: 250, weight_g: 80, power_w: 0, compatibility: { requires: [], conflicts: [] }, specs: { material: "wood", finish: "veneer", explain: "Elegant natural wood for a unique look." }, appearance: { material: "velvet-backed", accent: "--accent-warm" } }
 ];
 
-document.addEventListener('DOMContentLoaded', initBuilder);
+document.addEventListener('DOMContentLoaded', initUpgrades);
 
-// Builder logic
-function initBuilder() {
-  let selectedModules = {}; // group -> moduleId
-  let totalPrice = 0;
-  let selectedSize = 'size-standard';
+// Upgrades logic - shopping cart
+function initUpgrades() {
+  let cartTotal = 0;
+  let cartItems = {}; // moduleId -> qty
 
   // Set video playback rate
   const video = document.getElementById('video');
   if (video) {
     video.playbackRate = 2;
-  }
-
-  // Add size selector section
-  const sizeSection = document.createElement('section');
-  sizeSection.id = 'size-selector';
-  sizeSection.innerHTML = `
-    <h2>choose your size</h2>
-    <div class="size-selector-grid"></div>
-  `;
-  const main = document.querySelector('main');
-  const h1 = main.querySelector('h1');
-  main.insertBefore(sizeSection, h1);
-
-  // Populate size selector
-  populateSizeSelector();
-
-  function populateSizeSelector() {
-    const grid = document.querySelector('.size-selector-grid');
-    grid.innerHTML = phoneSizes.map(createSizeCard).join('');
-
-    // Add selection events
-    grid.querySelectorAll('.size-selector-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const sizeId = card.dataset.id;
-        // Deselect previous
-        grid.querySelectorAll('.size-selector-card').forEach(c => c.classList.remove('selected'));
-        // Select new
-        card.classList.add('selected');
-        selectedSize = sizeId;
-        updateTotalPrice();
-      });
-    });
-  }
-
-  function createSizeCard(size) {
-    const isSelected = selectedSize === size.id;
-    return `
-      <div class="size-selector-card${isSelected ? ' selected' : ''}" data-id="${size.id}">
-        <h3>${size.title}</h3>
-        <p>+$${size.price_add}</p>
-        <p class="explain">${size.explain}</p>
-      </div>
-    `;
   }
 
   // Populate all categories
@@ -112,33 +60,27 @@ function initBuilder() {
 
   function populateCategory(family, grid) {
     const filtered = modulesData.filter(m => m.group === family);
-    grid.innerHTML = filtered.map(createModuleCard).join('');
+    grid.innerHTML = filtered.map(createUpgradeCard).join('');
 
-    // Add selection events
-    grid.querySelectorAll('.module-selector-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const modId = card.dataset.id;
-        const module = modulesData.find(m => m.id === modId);
-        // Deselect previous
-        grid.querySelectorAll('.module-selector-card').forEach(c => c.classList.remove('selected'));
-        // Select new
-        card.classList.add('selected');
-        selectedModules[module.group] = module.id;
-        updateTotalPrice();
-      });
-    });
+    // No selection events needed, just add to cart
   }
 
-  function createModuleCard(module) {
-    const svg = familySvgs(module.group);
-    const isSelected = selectedModules[module.group] === module.id;
+  function createUpgradeCard(module) {
+    const qty = cartItems[module.id] || 0;
     return `
-      <div class="module-selector-card${isSelected ? ' selected' : ''}" data-id="${module.id}">
+      <div class="upgrade-card" data-module-id="${module.id}">
         <div class="module-thumbnail">
-          ${svg}
+          ${familySvgs(module.group)}
         </div>
         <h3>${module.title}</h3>
-        <p>${module.specs.peak_ops || module.specs.capacity || module.specs.sensor || module.specs.cores || module.specs.material} - $${module.price}</p>
+        <p class="specs">${module.specs.peak_ops || module.specs.capacity || module.specs.sensor || module.specs.cores || module.specs.material}</p>
+        <p class="explain">${module.specs.explain}</p>
+        <p class="price">$${module.price}</p>
+        <div class="qty-controls">
+          <button class="qty-btn minus">-</button>
+          <span class="qty">${qty}</span>
+          <button class="qty-btn plus">+</button>
+        </div>
       </div>
     `;
   }
@@ -157,64 +99,24 @@ function initBuilder() {
     }
   }
 
-  function updateTotalPrice() {
-    totalPrice = Object.values(selectedModules).reduce((sum, modId) => {
-      const mod = modulesData.find(m => m.id === modId);
-      return sum + (mod ? mod.price : 0);
-    }, 0) + (selectedSize ? phoneSizes.find(s => s.id === selectedSize).price_add : 100);
-    document.getElementById('total-price').textContent = totalPrice;
-
-    updateSizeCompatibility();
-
-    // Show deploy section when all selected
-    const allSelected = Object.keys(selectedModules).length === 8;
-    const deploySection = document.getElementById('deploy-section');
-    if (allSelected && !deploySection) {
-      showDeploySummary();
-    } else if (deploySection && !allSelected) {
-      deploySection.remove();
+  // Global event for all + and - buttons
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('plus') || e.target.classList.contains('minus')) {
+      const card = e.target.closest('.upgrade-card');
+      const moduleId = card.dataset.moduleId;
+      const isPlus = e.target.classList.contains('plus');
+      cartItems[moduleId] = (cartItems[moduleId] || 0) + (isPlus ? 1 : -1);
+      if (cartItems[moduleId] < 0) cartItems[moduleId] = 0;
+      updateCart();
+      card.querySelector('.qty').textContent = cartItems[moduleId];
     }
-  }
+  });
 
-  function updateSizeCompatibility() {
-    const selCamera = selectedModules.camera ? modulesData.find(m => m.id === selectedModules.camera) : null;
-    const selBattery = selectedModules.battery ? modulesData.find(m => m.id === selectedModules.battery) : null;
-    const largeBtn = document.querySelector('[data-id="size-large"]');
-    if (largeBtn) {
-      const canSelectLarge = (selCamera && selCamera.title.includes('Voyage') && selBattery && selBattery.title.includes('Ever'));
-      largeBtn.style.opacity = canSelectLarge ? 1 : 0.5;
-      largeBtn.style.pointerEvents = canSelectLarge ? 'auto' : 'none';
-      if (!canSelectLarge && selectedSize === 'size-large') {
-        selectedSize = 'size-standard';
-      }
-    }
-  }
-
-  function showDeploySummary() {
-    const main = document.querySelector('main');
-    const summary = document.createElement('section');
-    summary.id = 'deploy-section';
-    const sizeTitle = phoneSizes.find(s => s.id === selectedSize).title;
-    summary.innerHTML = `
-      <h2>your ark is ready for deployment</h2>
-      <p class="final-price">price: $${totalPrice}</p>
-      <div class="build-summary">
-        <ul>
-          ${Object.values(selectedModules).map(id => {
-            const mod = modulesData.find(m => m.id === id);
-            const spec = mod.specs.peak_ops || mod.specs.capacity || mod.specs.material || mod.specs.cores || mod.specs.type || mod.specs.refresh || mod.specs.method || mod.specs.finish || 'selected';
-            return `<li>${mod.title}: ${spec} - $${mod.price}</li>`;
-          }).join('')}<li>${sizeTitle} size: +$${phoneSizes.find(s => s.id === selectedSize).price_add}</li>
-        </ul>
-      </div>
-      <div class="deploy-actions">
-        <button id="deploy-btn">deploy and purchase</button>
-      </div>
-    `;
-    main.appendChild(summary);
-
-    document.getElementById('deploy-btn').addEventListener('click', () => {
-      alert(`Purchased for $${totalPrice}!`);
-    });
+  function updateCart() {
+    cartTotal = Object.entries(cartItems).reduce((sum, [id, qty]) => {
+      const mod = modulesData.find(m => m.id === id);
+      return sum + (mod.price * qty);
+    }, 0);
+    document.getElementById('cart-total').textContent = `spare basket: $${cartTotal}`;
   }
 }

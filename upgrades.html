@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ark Modular - Upgrades & Spares</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" />
+</head>
+<body>
+  <!-- Navigation bar -->
+  <nav class="top-nav">
+    <a href="index.html" class="nav-link">home</a>
+    <a href="builder.html" class="nav-link">forge</a>
+    <a href="upgrades.html" class="nav-link">upgrade</a>
+  </nav>
+
+  <video id="video" autoplay muted loop>
+    <source src="video-placeholder.mp4" type="video/mp4">
+  </video>
+
+  <main>
+    <section id="upgrades-header">
+      <h1>ark modular</h1>
+      <p>upgrade or repair your ark with official parts</p>
+        <p id="cart-total">spare basket: $0</p>
+        <a href="builder.html" class="builder-link">build a new phone</a>
+        <a href="index.html" class="back-home">← home</a>
+    </section>
+
+    <section id="upgrades-list">
+      <div class="module-category" data-family="npu">
+        <h2>neural compute upgrade</h2>
+        <div class="module-grid"></div>
+      </div>
+
+      <div class="module-category" data-family="cpu">
+        <h2>cpu/gpu upgrade</h2>
+        <div class="module-grid"></div>
+      </div>
+
+      <div class="module-category" data-family="ram">
+        <h2>ram upgrade</h2>
+        <div class="module-grid"></div>
+      </div>
+
+      <div class="module-category" data-family="thermal">
+        <h2>thermal upgrade</h2>
+        <div class="module-grid"></div>
+      </div>
+
+      <div class="module-category" data-family="battery">
+        <h2>battery replacement</h2>
+        <div class="module-grid"></div>
+      </div>
+
+      <div class="module-category" data-family="camera">
+        <h2>camera upgrade</h2>
+        <div class="module-grid"></div>
+      </div>
+
+      <div class="module-category" data-family="display">
+        <h2>display replacement</h2>
+        <div class="module-grid"></div>
+      </div>
+
+      <div class="module-category" data-family="frame">
+        <h2>frame/shell replacement</h2>
+        <div class="module-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="scripts/upgrades.js"></script>
+  <script src="https://vjs.zencdn.net/8.16.1/video.js"></script>
+</body>
+</html>
