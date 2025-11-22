@@ -237,7 +237,7 @@ main {
 
 .teaser-content p {
   font-size: 18px;
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
   color: var(--accent-warm);
   text-transform: none;
 }
