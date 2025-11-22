@@ -171,7 +171,7 @@ code, .mono {
 
 .hero .headline.stuck {
   position: fixed;
-  top: -20px;
+  top: -40px;
   left: 0;
   right: 0;
   text-align: center;
@@ -675,13 +675,13 @@ main {
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(0,0,0,0.9);
+  background: rgba(0,0,0,0.95);
   padding: var(--space-sm) var(--space-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 1000;
-  border-bottom: 1px solid var(--dark-brown);
+  border-bottom: 1px solid var(--metal-cold);
 }
 
 .nav-link {
