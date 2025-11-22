@@ -135,10 +135,10 @@ function initApp() {
     window.requestAnimationFrame = (cb) => setTimeout(cb, 16 * 5); // Debounce to reduce motion
   }
 
-  // Set video playback rate to 0.5x - since autoplay needs mute
+  // Set video playback rate to 1.75x - since autoplay needs mute
   const video = document.getElementById('video');
   if (video) {
-    video.playbackRate = 0.5;
+    video.playbackRate = 2;
   }
 
   // Update summary panel with live aria-polite

@@ -39,16 +39,28 @@ body {
   font-family: 'Manrope', sans-serif;
   margin: 0;
   padding: 0;
-  background: transparent; /* Let video show through */
+  background: transparent;
   color: var(--paper-ink);
   line-height: 1.5;
   overflow-x: hidden; /* Remove horizontal scroll */
 }
 
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.8);
+  z-index: 0;
+  pointer-events: none;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Manrope', sans-serif;
   font-weight: 600;
-  text-shadow: 0 1px 12px rgba(123, 77, 255, 0.06);
+  text-shadow: 0 1px 12px rgba(184, 115, 51, 0.3);
   letter-spacing: -0.02em;
   margin: 0;
 }
@@ -125,11 +137,12 @@ code, .mono {
   position: relative;
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: var(--space-lg);
   align-items: center;
   padding: var(--space-lg);
   margin-right: calc(-1 * var(--space-lg));
+  justify-items: center;
 }
 
 .hero::before {
@@ -169,7 +182,7 @@ code, .mono {
   width: 100vw;
   height: 100vh;
   object-fit: cover;
-  z-index: var(--z-elev-low);
+  z-index: -1;
   pointer-events: none;
 }
 
@@ -183,7 +196,6 @@ main {
 .section {
   padding: var(--space-lg);
   margin-bottom: var(--space-lg);
-  background: var(--graphite); /* Subtle overlay for readability */
 }
 
 .concept { /* Same background */ }
@@ -287,9 +299,11 @@ main {
   background: var(--graphite);
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(45deg, var(--metal-cold), var(--accent-warm));
+  background: linear-gradient(45deg, #8B5A2B, #A0522D);
   border-radius: 6px;
+  box-shadow: inset 0 0 5px rgba(255,255,255,0.3);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(45deg, var(--accent-warm), var(--metal-cold));
+  background: linear-gradient(45deg, #A0522D, #8B5A2B);
+  box-shadow: inset 0 0 8px rgba(255,255,255,0.5);
 }
