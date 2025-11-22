@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', initUpgrades);
 function initUpgrades() {
   let cartTotal = 0;
   let cartItems = {}; // moduleId -> qty
+  let isRefurbished = false;
 
   // Set video playback rate
   const video = document.getElementById('video');
@@ -62,20 +63,34 @@ function initUpgrades() {
     const filtered = modulesData.filter(m => m.group === family);
     grid.innerHTML = filtered.map(createUpgradeCard).join('');
 
-    // No selection events needed, just add to cart
+    // Repopulate to update prices
   }
+
+  // Refurbished toggle
+  document.getElementById('refurbished-toggle').addEventListener('change', (e) => {
+    isRefurbished = e.target.checked;
+    // Repopulate cards with new prices
+    categories.forEach(category => {
+      const family = category.dataset.family;
+      const grid = category.querySelector('.module-grid');
+      grid.innerHTML = ''; // clear
+      populateCategory(family, grid);
+    });
+    updateCart();
+  });
 
   function createUpgradeCard(module) {
     const qty = cartItems[module.id] || 0;
+    const displayPrice = Math.round(module.price * (isRefurbished ? 0.5 : 1));
     return `
       <div class="upgrade-card" data-module-id="${module.id}">
         <div class="module-thumbnail">
           ${familySvgs(module.group)}
         </div>
-        <h3>${module.title}</h3>
+        <h3>${module.title}${isRefurbished ? ' (Refurbished)' : ''}</h3>
         <p class="specs">${module.specs.peak_ops || module.specs.capacity || module.specs.sensor || module.specs.cores || module.specs.material}</p>
         <p class="explain">${module.specs.explain}</p>
-        <p class="price">$${module.price}</p>
+        <p class="price">$${displayPrice}</p>
         <div class="qty-controls">
           <button class="qty-btn minus">-</button>
           <span class="qty">${qty}</span>
@@ -116,7 +131,45 @@ function initUpgrades() {
     cartTotal = Object.entries(cartItems).reduce((sum, [id, qty]) => {
       const mod = modulesData.find(m => m.id === id);
       return sum + (mod.price * qty);
-    }, 0);
-    document.getElementById('cart-total').textContent = `spare basket: $${cartTotal}`;
+    }, 0) * (isRefurbished ? 0.5 : 1);
+    document.getElementById('cart-total').textContent = `spare basket: $${Math.round(cartTotal)}`;
+
+    // Show purchase section if any items selected
+    const anySelected = cartTotal > 0;
+    const purchaseSection = document.getElementById('purchase-section');
+    if (anySelected && !purchaseSection) {
+      showPurchaseSummary();
+    } else if (purchaseSection && !anySelected) {
+      purchaseSection.remove();
+    }
+  }
+
+  function showPurchaseSummary() {
+    const main = document.querySelector('main');
+    const summary = document.createElement('section');
+    summary.id = 'purchase-section';
+    const factor = isRefurbished ? 0.5 : 1;
+    const note = isRefurbished ? '<p class="refurb-note">100% certified refurbished parts help the planet and save you money.</p>' : '';
+    summary.innerHTML = `
+      <h2>your upgrades are ready</h2>
+      <p class="final-price">total: $${cartTotal}</p>
+      ${note}
+      <div class="build-summary">
+        <ul>
+          ${Object.entries(cartItems).map(([id, qty]) => {
+            const mod = modulesData.find(m => m.id === id);
+            return qty > 0 ? `<li>${mod.title}${isRefurbished ? ' (Refurbished)' : ''} x${qty} - $${Math.round(mod.price * factor * qty)}</li>` : '';
+          }).filter(l => l).join('')}
+        </ul>
+      </div>
+      <div class="deploy-actions">
+        <button id="purchase-btn">purchase upgrades</button>
+      </div>
+    `;
+    main.appendChild(summary);
+
+    document.getElementById('purchase-btn').addEventListener('click', () => {
+      alert(`Purchased upgrades for $${cartTotal}!`);
+    });
   }
 }

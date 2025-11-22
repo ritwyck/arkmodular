@@ -295,6 +295,24 @@ function initApp() {
     video.playbackRate = 2;
   }
 
+
+
+  // Footer visibility on scroll to bottom
+  const footer = document.querySelector('.page-footer');
+  if (footer) {
+    footer.style.opacity = '0';
+    footer.style.transition = 'opacity 0.3s ease';
+    function updateFooterVisibility() {
+      if (window.scrollY > 10) {
+        footer.style.opacity = '1';
+      } else {
+        footer.style.opacity = '0';
+      }
+    }
+    window.addEventListener('scroll', updateFooterVisibility);
+    updateFooterVisibility(); // Check on load
+  }
+
   // Update summary panel with live aria-polite
   function updateSummary(data) {
     const summary = document.getElementById('summary-panel');

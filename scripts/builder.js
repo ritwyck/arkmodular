@@ -52,6 +52,7 @@ function initBuilder() {
   let selectedModules = {}; // group -> moduleId
   let totalPrice = 0;
   let selectedSize = 'size-standard';
+  let isRefurbished = false;
 
   // Set video playback rate
   const video = document.getElementById('video');
@@ -110,6 +111,19 @@ function initBuilder() {
     populateCategory(family, grid);
   });
 
+  // Refurbished toggle
+  document.getElementById('refurbished-toggle').addEventListener('change', (e) => {
+    isRefurbished = e.target.checked;
+    // Repopulate cards with new prices
+    categories.forEach(category => {
+      const family = category.dataset.family;
+      const grid = category.querySelector('.module-grid');
+      populateCategory(family, grid);
+    });
+    populateSizeSelector();
+    updateTotalPrice();
+  });
+
   function populateCategory(family, grid) {
     const filtered = modulesData.filter(m => m.group === family);
     grid.innerHTML = filtered.map(createModuleCard).join('');
@@ -132,13 +146,14 @@ function initBuilder() {
   function createModuleCard(module) {
     const svg = familySvgs(module.group);
     const isSelected = selectedModules[module.group] === module.id;
+    const displayPrice = Math.round(module.price * (isRefurbished ? 0.5 : 1));
     return `
       <div class="module-selector-card${isSelected ? ' selected' : ''}" data-id="${module.id}">
         <div class="module-thumbnail">
           ${svg}
         </div>
-        <h3>${module.title}</h3>
-        <p>${module.specs.peak_ops || module.specs.capacity || module.specs.sensor || module.specs.cores || module.specs.material} - $${module.price}</p>
+        <h3>${module.title}${isRefurbished ? ' (Refurbished)' : ''}</h3>
+        <p>${module.specs.peak_ops || module.specs.capacity || module.specs.sensor || module.specs.cores || module.specs.material} - $${displayPrice}</p>
       </div>
     `;
   }
@@ -158,11 +173,11 @@ function initBuilder() {
   }
 
   function updateTotalPrice() {
-    totalPrice = Object.values(selectedModules).reduce((sum, modId) => {
+    totalPrice = (Object.values(selectedModules).reduce((sum, modId) => {
       const mod = modulesData.find(m => m.id === modId);
       return sum + (mod ? mod.price : 0);
-    }, 0) + (selectedSize ? phoneSizes.find(s => s.id === selectedSize).price_add : 100);
-    document.getElementById('total-price').textContent = totalPrice;
+    }, 0) + (selectedSize ? phoneSizes.find(s => s.id === selectedSize).price_add : 100)) * (isRefurbished ? 0.5 : 1);
+    document.getElementById('total-price').textContent = Math.round(totalPrice);
 
     updateSizeCompatibility();
 
@@ -194,17 +209,20 @@ function initBuilder() {
     const main = document.querySelector('main');
     const summary = document.createElement('section');
     summary.id = 'deploy-section';
+    const factor = isRefurbished ? 0.5 : 1;
     const sizeTitle = phoneSizes.find(s => s.id === selectedSize).title;
+    const note = isRefurbished ? '<p class="refurb-note">100% certified refurbished parts help the planet and save you money.</p>' : '';
     summary.innerHTML = `
       <h2>your ark is ready for deployment</h2>
       <p class="final-price">price: $${totalPrice}</p>
+      ${note}
       <div class="build-summary">
         <ul>
           ${Object.values(selectedModules).map(id => {
             const mod = modulesData.find(m => m.id === id);
             const spec = mod.specs.peak_ops || mod.specs.capacity || mod.specs.material || mod.specs.cores || mod.specs.type || mod.specs.refresh || mod.specs.method || mod.specs.finish || 'selected';
-            return `<li>${mod.title}: ${spec} - $${mod.price}</li>`;
-          }).join('')}<li>${sizeTitle} size: +$${phoneSizes.find(s => s.id === selectedSize).price_add}</li>
+            return `<li>${mod.title}${isRefurbished ? ' (Refurbished)' : ''}: ${spec} - $${Math.round(mod.price * factor)}</li>`;
+          }).join('')}<li>${sizeTitle} size: +$${Math.round(phoneSizes.find(s => s.id === selectedSize).price_add * factor)}</li>
         </ul>
       </div>
       <div class="deploy-actions">

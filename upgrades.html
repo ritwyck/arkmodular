@@ -15,17 +15,18 @@
     <a href="upgrades.html" class="nav-link">upgrade</a>
   </nav>
 
-  <video id="video" autoplay muted loop>
-    <source src="video-placeholder.mp4" type="video/mp4">
+  <video id="video" autoplay muted loop class="video-bg">
+    <source src="./phone.mov" type="video/quicktime">
   </video>
 
   <main>
     <section id="upgrades-header">
       <h1>ark modular</h1>
       <p>upgrade or repair your ark with official parts</p>
+      <label class="refurbished-toggle">
+        <input type="checkbox" id="refurbished-toggle"> use 100% certified refurbished parts
+      </label>
         <p id="cart-total">spare basket: $0</p>
-        <a href="builder.html" class="builder-link">build a new phone</a>
-        <a href="index.html" class="back-home">← home</a>
     </section>
 
     <section id="upgrades-list">
@@ -70,6 +71,11 @@
       </div>
     </section>
   </main>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+      © 2025 Ark Modular. All rights reserved.
+  </footer>
 
   <script src="scripts/upgrades.js"></script>
   <script src="https://vjs.zencdn.net/8.16.1/video.js"></script>
