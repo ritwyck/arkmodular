@@ -359,12 +359,3 @@ document.addEventListener('mouseup', () => {
   document.querySelector('.stage').style.cursor = '';
 });
 
-// Prep for 3D - if using canvas, would use ctx.rotate, but for now CSS
-
-/* Why these choices:
-- IntersectionObserver with rootMargin for preemptive reveals to avoid layout shift
-- requestAnimationFrame in recoil for smooth, performance-optimized
-- ARIA: dynamic live summary for screen readers, role=listbox for nav
-- Reduced motion: only crossfade, removing transforms/rotations as per pref
-- Bezier curves applied via CSS var to match mechanical/tactile feel
-*/
