@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ark Modular - Build Your Phone</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <!-- Accessibility skip link -->
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <!-- Background video with 0.5x speed, fills screen, black overlay on body -->
+    <video id="video" autoplay muted loop class="video-bg">
+        <source src="./phone.mov" type="video/quicktime">
+        Your browser does not support the video tag.
+    </video>
+
+    <main id="main">
+        <!-- Header -->
+        <header class="builder-header">
+            <a href="index.html" class="back-home">← Ark Modular</a>
+            <h1>forge your perfect ark</h1>
+        </header>
+
+        <!-- Price display -->
+        <div class="price-display">
+            <p>total price: $<span id="total-price">0</span> (budget $400 - $1600)</p>
+        </div>
+
+        <!-- Module selector -->
+        <div class="module-selector">
+            <div class="family-tabs">
+                <button class="family-tab active" data-family="npu">Neural Compute</button>
+                <button class="family-tab" data-family="cpu">CPU/GPU</button>
+                <button class="family-tab" data-family="ram">RAM</button>
+                <button class="family-tab" data-family="thermal">Thermal</button>
+                <button class="family-tab" data-family="battery">Battery</button>
+                <button class="family-tab" data-family="camera">Camera</button>
+                <button class="family-tab" data-family="display">Display</button>
+                <button class="family-tab" data-family="frame">Frame</button>
+            </div>
+            <div class="module-grid" role="listbox" aria-label="Available modules"></div>
+        </div>
+
+        <div class="selection-summary">
+            <p>selected: <span id="selected-module">none</span></p>
+            <button id="confirm-install" disabled>Install Module</button>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="scripts/builder.js"></script>
+</body>
+</html>
