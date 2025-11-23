@@ -161,6 +161,7 @@ function initUpgrades() {
       if (cartItems[moduleId] < 0) cartItems[moduleId] = 0;
       updateCart();
       card.querySelector('.qty').textContent = cartItems[moduleId];
+      card.classList.toggle('selected', cartItems[moduleId] > 0);
     }
   });
 
