@@ -230,16 +230,10 @@ function initBuilder() {
   }
 
   function updateSizeCompatibility() {
-    const selCamera = selectedModules.camera ? modulesData.find(m => m.id === selectedModules.camera) : null;
-    const selBattery = selectedModules.battery ? modulesData.find(m => m.id === selectedModules.battery) : null;
     const largeBtn = document.querySelector('[data-id="size-large"]');
     if (largeBtn) {
-      const canSelectLarge = (selCamera && selCamera.title.includes('Voyage') && selBattery && selBattery.title.includes('Ever'));
-      largeBtn.style.opacity = canSelectLarge ? 1 : 0.5;
-      largeBtn.style.pointerEvents = canSelectLarge ? 'auto' : 'none';
-      if (!canSelectLarge && selectedSize === 'size-large') {
-        selectedSize = 'size-standard';
-      }
+      largeBtn.style.opacity = 1;
+      largeBtn.style.pointerEvents = 'auto';
     }
   }
 
