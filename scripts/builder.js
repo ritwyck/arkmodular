@@ -219,11 +219,24 @@ function initBuilder() {
 
     updateSizeCompatibility();
 
-    // Show deploy section when all selected
+    // Show or update deploy section when all selected
     const allSelected = Object.keys(selectedModules).length === 8;
     const deploySection = document.getElementById('deploy-section');
-    if (allSelected && !deploySection) {
-      showDeploySummary();
+    if (allSelected) {
+      if (!deploySection) {
+        showDeploySummary();
+      } else {
+        // Update existing summary
+        const sizeTitle = phoneSizes.find(s => s.id === selectedSize).title;
+        const summaryList = deploySection.querySelector('ul');
+        summaryList.innerHTML = Object.values(selectedModules).map(id => {
+          const mod = modulesData.find(m => m.id === id);
+          const spec = mod.specs.peak_ops || mod.specs.capacity || mod.specs.material || mod.specs.cores || mod.specs.type || mod.specs.refresh || mod.specs.method || mod.specs.finish || 'selected';
+          return `<li>${mod.title}${isRefurbished ? ' (Refurbished)' : ''}: ${spec} - $${Math.round(mod.price * (isRefurbished ? 0.5 : 1))}</li>`;
+        }).join('') + `<li>${sizeTitle} size: +$${Math.round(phoneSizes.find(s => s.id === selectedSize).price_add * (isRefurbished ? 0.5 : 1))}</li>`;
+        const finalPriceEl = deploySection.querySelector('.final-price');
+        finalPriceEl.textContent = `price: $${totalPrice}`;
+      }
     } else if (deploySection && !allSelected) {
       deploySection.remove();
     }
