@@ -45,6 +45,43 @@ const modulesData = [
   { id: "frame-walnut", group: "frame", title: "Walnut Veneer", tier: "walnut", price: 250, weight_g: 80, power_w: 0, compatibility: { requires: [], conflicts: [] }, specs: { material: "wood", finish: "veneer", explain: "Elegant natural wood for a unique look." }, appearance: { material: "velvet-backed", accent: "--accent-warm" } }
 ];
 
+function getModuleImage(group, tier) {
+  const groupToPrefix = {
+    'npu': 'npu',
+    'cpu': 'cpu',
+    'ram': 'ram',
+    'thermal': 'c',
+    'battery': 'b',
+    'camera': 'c',
+    'display': 'd',
+    'frame': 'd'
+  };
+  const groupToFolder = {
+    'npu': 'npu',
+    'cpu': 'CPU',
+    'ram': 'ram',
+    'thermal': 'cooling',
+    'battery': 'battery',
+    'camera': 'camera',
+    'display': 'display',
+    'frame': 'frame'
+  };
+  const tierMap = {
+    'muse':1, 'arc':2, 'apollo':3,
+    'petite':1, 'stride':2, 'atlas':3,
+    '8gb':1, '16gb':2, '32gb':3,
+    'passive':1, 'vapor':2, 'active':3,
+    'dawn':1, 'ever':2, 'cobalt':3,
+    'focus':1, 'voyage':2, 'nocturne':3,
+    'oled90':1, 'oled120':2, 'microled':3,
+    'anodized':1, 'titanium':2, 'walnut':3
+  };
+  const prefix = groupToPrefix[group];
+  const folder = groupToFolder[group];
+  const num = tierMap[tier];
+  return `assets/${folder}/${prefix}${num}.png`;
+}
+
 document.addEventListener('DOMContentLoaded', initBuilder);
 
 // Builder logic
@@ -144,13 +181,13 @@ function initBuilder() {
   }
 
   function createModuleCard(module) {
-    const svg = familySvgs(module.group);
+    const imgSrc = getModuleImage(module.group, module.tier);
     const isSelected = selectedModules[module.group] === module.id;
     const displayPrice = Math.round(module.price * (isRefurbished ? 0.5 : 1));
     return `
       <div class="module-selector-card${isSelected ? ' selected' : ''}" data-id="${module.id}">
         <div class="module-thumbnail">
-          ${svg}
+          <img src="${imgSrc}" alt="${module.title}">
         </div>
         <h3>${module.title}${isRefurbished ? ' (Refurbished)' : ''}</h3>
         <p>${module.specs.peak_ops || module.specs.capacity || module.specs.sensor || module.specs.cores || module.specs.material} - $${displayPrice}</p>
@@ -211,7 +248,7 @@ function initBuilder() {
     summary.id = 'deploy-section';
     const factor = isRefurbished ? 0.5 : 1;
     const sizeTitle = phoneSizes.find(s => s.id === selectedSize).title;
-    const note = isRefurbished ? '<p class="refurb-note">100% certified refurbished parts help the planet and save you money.</p>' : '';
+    const note = '';
     summary.innerHTML = `
       <h2>your ark is ready for deployment</h2>
       <p class="final-price">price: $${totalPrice}</p>

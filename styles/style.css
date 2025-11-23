@@ -384,7 +384,7 @@ main {
 }
 ::-webkit-scrollbar-thumb {
   background: #000000;
-  border-radius: 6px;
+  border-radius: 0px;
   box-shadow: inset 0 0 10px rgba(255,255,255,0.6), inset 0 0 0 1px rgba(128,128,128,0.5);
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -479,7 +479,8 @@ main {
 }
 
 .module-selector-card {
-  background: rgba(192, 192, 192, 0.1);  /* silver translucent */
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid #000000;
   border-radius: var(--radius-sm);
   padding: var(--space-sm);
   text-align: center;
@@ -493,10 +494,15 @@ main {
   background: rgba(70,40,20,0.3);
 }
 
-.module-selector-card svg {
-  width: 80px;
-  height: 80px;
+.module-thumbnail img {
+  width: 300px;
+  height: 300px;
   margin-bottom: var(--space-xs);
+  transition: transform 0.3s ease;
+}
+
+.module-thumbnail:hover img {
+  transform: scale(1.05);
 }
 
 .selection-summary {
@@ -706,6 +712,10 @@ main {
   text-decoration: none;
 }
 
+#upgrades-header {
+  margin-left: 100px;
+}
+
 .builder-link {
   color: var(--accent-warm);
   text-decoration: none;
@@ -717,7 +727,7 @@ main {
 }
 
 .upgrade-card {
-  background: var(--graphite);
+  background: rgba(0, 0, 0, 0.3);
   border: 1px solid var(--metal-cold);
   border-radius: var(--radius-sm);
   padding: var(--space-md);

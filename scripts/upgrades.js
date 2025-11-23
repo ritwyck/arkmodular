@@ -37,6 +37,43 @@ const modulesData = [
   { id: "frame-walnut", group: "frame", title: "Walnut Veneer", tier: "walnut", price: 250, weight_g: 80, power_w: 0, compatibility: { requires: [], conflicts: [] }, specs: { material: "wood", finish: "veneer", explain: "Elegant natural wood for a unique look." }, appearance: { material: "velvet-backed", accent: "--accent-warm" } }
 ];
 
+function getModuleImage(group, tier) {
+  const groupToPrefix = {
+    'npu': 'npu',
+    'cpu': 'cpu',
+    'ram': 'ram',
+    'thermal': 'c',
+    'battery': 'b',
+    'camera': 'c',
+    'display': 'd',
+    'frame': 'd'
+  };
+  const groupToFolder = {
+    'npu': 'npu',
+    'cpu': 'CPU',
+    'ram': 'ram',
+    'thermal': 'cooling',
+    'battery': 'battery',
+    'camera': 'camera',
+    'display': 'display',
+    'frame': 'frame'
+  };
+  const tierMap = {
+    'muse':1, 'arc':2, 'apollo':3,
+    'petite':1, 'stride':2, 'atlas':3,
+    '8gb':1, '16gb':2, '32gb':3,
+    'passive':1, 'vapor':2, 'active':3,
+    'dawn':1, 'ever':2, 'cobalt':3,
+    'focus':1, 'voyage':2, 'nocturne':3,
+    'oled90':1, 'oled120':2, 'microled':3,
+    'anodized':1, 'titanium':2, 'walnut':3
+  };
+  const prefix = groupToPrefix[group];
+  const folder = groupToFolder[group];
+  const num = tierMap[tier];
+  return `assets/${folder}/${prefix}${num}.png`;
+}
+
 document.addEventListener('DOMContentLoaded', initUpgrades);
 
 // Upgrades logic - shopping cart
@@ -85,7 +122,7 @@ function initUpgrades() {
     return `
       <div class="upgrade-card" data-module-id="${module.id}">
         <div class="module-thumbnail">
-          ${familySvgs(module.group)}
+          <img src="${getModuleImage(module.group, module.tier)}" alt="${module.title}">
         </div>
         <h3>${module.title}${isRefurbished ? ' (Refurbished)' : ''}</h3>
         <p class="specs">${module.specs.peak_ops || module.specs.capacity || module.specs.sensor || module.specs.cores || module.specs.material}</p>
@@ -132,7 +169,9 @@ function initUpgrades() {
       const mod = modulesData.find(m => m.id === id);
       return sum + (mod.price * qty);
     }, 0) * (isRefurbished ? 0.5 : 1);
-    document.getElementById('cart-total').textContent = `spare basket: $${Math.round(cartTotal)}`;
+    const cartEl = document.getElementById('cart-total');
+    cartEl.textContent = cartTotal ? `$${Math.round(cartTotal)}` : '';
+    cartEl.style.display = cartTotal ? 'inline' : 'none';
 
     // Show purchase section if any items selected
     const anySelected = cartTotal > 0;
@@ -149,7 +188,8 @@ function initUpgrades() {
     const summary = document.createElement('section');
     summary.id = 'purchase-section';
     const factor = isRefurbished ? 0.5 : 1;
-    const note = isRefurbished ? '<p class="refurb-note">100% certified refurbished parts help the planet and save you money.</p>' : '';
+    const note = ''
+    // note = isRefurbished ? '<p class="refurb-note">...</p>' : '';
     summary.innerHTML = `
       <h2>your upgrades are ready</h2>
       <p class="final-price">total: $${cartTotal}</p>
