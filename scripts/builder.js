@@ -98,15 +98,14 @@ function initBuilder() {
   }
 
   // Add size selector section
-  const sizeSection = document.createElement('section');
+  const sizeSection = document.createElement('div');
   sizeSection.id = 'size-selector';
   sizeSection.innerHTML = `
     <h2>choose your size</h2>
     <div class="size-selector-grid"></div>
   `;
-  const main = document.querySelector('main');
-  const h1 = main.querySelector('h1');
-  main.insertBefore(sizeSection, h1);
+  const upgradesList = document.getElementById('upgrades-list');
+  upgradesList.insertBefore(sizeSection, upgradesList.firstElementChild);
 
   // Populate size selector
   populateSizeSelector();
@@ -166,12 +165,12 @@ function initBuilder() {
     grid.innerHTML = filtered.map(createModuleCard).join('');
 
     // Add selection events
-    grid.querySelectorAll('.module-selector-card').forEach(card => {
+    grid.querySelectorAll('.upgrade-card').forEach(card => {
       card.addEventListener('click', () => {
         const modId = card.dataset.id;
         const module = modulesData.find(m => m.id === modId);
         // Deselect previous
-        grid.querySelectorAll('.module-selector-card').forEach(c => c.classList.remove('selected'));
+        grid.querySelectorAll('.upgrade-card').forEach(c => c.classList.remove('selected'));
         // Select new
         card.classList.add('selected');
         selectedModules[module.group] = module.id;
@@ -185,12 +184,14 @@ function initBuilder() {
     const isSelected = selectedModules[module.group] === module.id;
     const displayPrice = Math.round(module.price * (isRefurbished ? 0.5 : 1));
     return `
-      <div class="module-selector-card${isSelected ? ' selected' : ''}" data-id="${module.id}">
+      <div class="upgrade-card${isSelected ? ' selected' : ''}" data-id="${module.id}">
         <div class="module-thumbnail">
           <img src="${imgSrc}" alt="${module.title}">
         </div>
         <h3>${module.title}${isRefurbished ? ' (Refurbished)' : ''}</h3>
-        <p>${module.specs.peak_ops || module.specs.capacity || module.specs.sensor || module.specs.cores || module.specs.material} - $${displayPrice}</p>
+        <p class="specs">${module.specs.peak_ops || module.specs.capacity || module.specs.sensor || module.specs.cores || module.specs.material}</p>
+        <p class="explain">${module.specs.explain}</p>
+        <p class="price">$${displayPrice}</p>
       </div>
     `;
   }
