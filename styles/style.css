@@ -804,6 +804,11 @@ main {
   margin-top: var(--space-lg);
 }
 
+.refurbished-toggle {
+  z-index: 1000;
+  margin-left: 50px;
+}
+
 #purchase-section .deploy-actions {
   margin-left: -150px;
 }
