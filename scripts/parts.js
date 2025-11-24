@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', initUpgrades);
 
 // Upgrades logic - shopping cart
 function initUpgrades() {
+  console.log('initUpgrades called');
   let cartTotal = 0;
   let cartItems = {}; // moduleId -> qty
   let isRefurbished = false;
@@ -154,6 +155,7 @@ function initUpgrades() {
   // Global event for all + and - buttons
   document.addEventListener('click', function(e) {
     if (e.target.classList.contains('plus') || e.target.classList.contains('minus')) {
+      console.log('Button clicked:', e.target.classList.contains('plus') ? 'plus' : 'minus');
       const card = e.target.closest('.upgrade-card');
       const moduleId = card.dataset.moduleId;
       const isPlus = e.target.classList.contains('plus');
@@ -170,16 +172,27 @@ function initUpgrades() {
       const mod = modulesData.find(m => m.id === id);
       return sum + (mod.price * qty);
     }, 0) * (isRefurbished ? 0.5 : 1);
+    console.log('updateCart called, cartItems:', cartItems, 'cartTotal:', cartTotal);
     const cartEl = document.getElementById('cart-total');
-    cartEl.textContent = cartTotal ? `$${Math.round(cartTotal)}` : '';
-    cartEl.style.display = cartTotal ? 'inline' : 'none';
+    cartEl.textContent = cartTotal > 0 ? `$${Math.round(cartTotal)}` : '$0';
+    cartEl.style.display = 'inline';
 
-    // Show purchase section if any items selected
+    // Show or update purchase section if any items selected
     const anySelected = cartTotal > 0;
     const purchaseSection = document.getElementById('purchase-section');
-    if (anySelected && !purchaseSection) {
-      showPurchaseSummary();
-    } else if (purchaseSection && !anySelected) {
+    if (anySelected) {
+      if (!purchaseSection) {
+        showPurchaseSummary();
+    } else {
+      // Update existing summary
+      purchaseSection.querySelector('.final-price').textContent = `price: $${Math.round(cartTotal)}`;
+      const summaryList = purchaseSection.querySelector('ul');
+      summaryList.innerHTML = Object.entries(cartItems).map(([id, qty]) => {
+        const mod = modulesData.find(m => m.id === id);
+        return qty > 0 ? `<li>${mod.title}${isRefurbished ? ' (Refurbished)' : ''} x${qty} - $${Math.round(mod.price * (isRefurbished ? 0.5 : 1) * qty)}</li>` : '';
+      }).filter(l => l).join('');
+      }
+    } else if (purchaseSection) {
       purchaseSection.remove();
     }
   }
@@ -192,8 +205,8 @@ function initUpgrades() {
     const note = ''
     // note = isRefurbished ? '<p class="refurb-note">...</p>' : '';
     summary.innerHTML = `
-      <h2>your upgrades are ready</h2>
-      <p class="final-price">total: $${cartTotal}</p>
+      <h2>your upgrades are ready for deployment</h2>
+      <p class="final-price">price: $${cartTotal}</p>
       ${note}
       <div class="build-summary">
         <ul>
@@ -203,14 +216,15 @@ function initUpgrades() {
           }).filter(l => l).join('')}
         </ul>
       </div>
-      <div class="deploy-actions">
-        <button id="purchase-btn">purchase upgrades</button>
+      <div class="deploy-actions" style="margin-left: -50px;">
+        <button id="deploy-btn">purchase</button>
       </div>
     `;
     main.appendChild(summary);
+    summary.style.marginLeft = '50px';
 
-    document.getElementById('purchase-btn').addEventListener('click', () => {
-      alert(`Purchased upgrades for $${cartTotal}!`);
+    document.getElementById('deploy-btn').addEventListener('click', () => {
+      alert(`Purchased for $${cartTotal}!`);
     });
   }
 }
