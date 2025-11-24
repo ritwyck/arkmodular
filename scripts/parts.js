@@ -216,7 +216,7 @@ function initUpgrades() {
           }).filter(l => l).join('')}
         </ul>
       </div>
-      <div class="deploy-actions" style="margin-left: -50px;">
+      <div class="deploy-actions" style="margin-left: -150px;">
         <button id="deploy-btn">purchase</button>
       </div>
     `;
