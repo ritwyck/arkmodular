@@ -804,8 +804,14 @@ main {
   margin-top: var(--space-lg);
 }
 
-.refurbished-toggle {
+.build-page .refurbished-toggle {
   z-index: 1000;
+  margin-left: 50px;
+}
+
+.parts-page .refurbished-toggle {
+  position: relative;
+  z-index: 10;
   margin-left: 50px;
 }
 
